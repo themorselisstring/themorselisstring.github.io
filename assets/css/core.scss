@@ -1,0 +1,120 @@
+@use "sass:map" as map;
+@use "sass:list" as list;
+@use "sass:math" as math;
+@use "../sass-util/_normalise.scss";
+
+//Vars
+$compileVars: (
+    "layoutSizes" :("sm","md","lg","xl","super")
+);
+$vars: (
+    max-width: 1200px,
+    color-background: black,
+    color-text: white,
+    color-primary: navy,
+    color-primary-contrast: red
+);
+
+//iterate over vars map and write out as css native properties
+:root {
+    @each $k,
+    $v in $vars {
+        --#{$k} : #{$v};
+    }
+}
+
+
+//Mixins / Helpers / Functions
+//write both css custom property method and fallback for unsupporting clients
+@mixin varCompatSimple($property, $variableName) {
+    #{$property} : map.get($vars, #{$variableName});
+    #{$property} : var(--#{$variableName});
+}
+
+//Programatic Styles
+//Generate typographic scale
+$layoutSizes : map.get($compileVars,"layoutSizes");
+$typeScaleStart : list.index($layoutSizes, "md"); //md is the 'start' point, ie 1rem
+$typeScaleI : 1 - $typeScaleStart; //offset it by the md index so we start with small values, note sass indexes start at 1
+$typeScaleStep: 1.5;
+@each $s in $layoutSizes{
+    .text-#{$s}{
+        @if($typeScaleI < 0){
+            //interpolate to remove the trailing space
+            font-size: #{math.div(1, math.pow($typeScaleStep, math.abs($typeScaleI)))}rem;
+        }
+        @else{
+            //x^0 = 1, x^1 = x.
+            //interpolate to remove the trailing space
+            font-size: #{math.pow($typeScaleStep, $typeScaleI)}rem;
+        }
+    }
+    .heading-#{$s}{
+        @extend .text-#{$s};
+        font-weight: bold;
+    }
+    $typeScaleI : $typeScaleI + 1;
+}
+
+//Styles
+
+.page-constrain {
+    max-width: var(--max-width);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    @include varCompatSimple("background-color", "color-background");
+    color: var(--color-text);
+}
+
+body>*:not(.escape) {
+    @extend.page-constrain;
+}
+
+body>header {
+    background-color: var(--color-primary);
+    padding: 1rem 0;
+    border-bottom: solid 3px var(--color-primary-contrast);
+}
+
+
+nav {
+    display: flex;
+}
+
+main {
+    margin-top: 1rem;
+    flex-grow: 1;
+    height: 100%;
+}
+
+.center {
+    text-align: center;
+}
+
+.card {
+    border-radius: 1em;
+    background: white;
+    color: black;
+    padding: 2em;
+}
+
+.project-card {
+    @extend .card;
+    max-width: 30ch;
+    flex: 1 1;
+    flex-basis: 20ch;
+
+}
+
+.projects {
+    display: flex;
+    justify-content: space-around;
+    max-width: max(50%, 400px);
+    margin: auto;
+    gap: 2rem;
+}

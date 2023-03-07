@@ -1,0 +1,37 @@
+---
+title: My Rad Blog
+---
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="/css/core.css">
+</head>
+
+<body>
+  <header class="escape center">
+    <div class="page-constrain">
+      <h1>Sean Fussell</h1>
+      <div class="external-links">
+        <a href="https://www.linkedin.com/in/sean-fussell-40152141/">LinkdIn</a>
+        <a href="https://github.com/themorselisstring">Github</a>
+      </div>
+    </div>
+  </header>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/readme">Readme</a>
+    <a href="/codesnippets">Code</a>
+  </nav>
+  <main>
+    {{ content | safe }}
+  </main>
+  <footer>
+    <span>copyright dawg</span>
+  </footer>
+</body>
+
+</html>
