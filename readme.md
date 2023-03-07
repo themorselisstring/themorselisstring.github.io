@@ -1,4 +1,3 @@
----
-layout: main.njk
----
-# Page header
+#Source for Sean Fussell static site
+
+Powered by eleventy & sass.
